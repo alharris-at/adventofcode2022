@@ -1,31 +1,35 @@
 use std::fs::{File};
 use std::io::{BufRead, Lines, BufReader, Result};
 use std::path::Path;
+use std::collections::HashMap;
 
 fn main() {
-    let mut max_val = 0;
-    let mut curr_val = 0;
+    let play_scores = HashMap::from([
+        (String::from("A X"), 4),
+        (String::from("A Y"), 8),
+        (String::from("A Z"), 3),
+        (String::from("B X"), 1),
+        (String::from("B Y"), 5),
+        (String::from("B Z"), 9),
+        (String::from("C X"), 7),
+        (String::from("C Y"), 2),
+        (String::from("C Z"), 6),
+    ]);
+
+    let mut score = 0;
 
     // File hosts must exist in current path before this produces output
     if let Ok(lines) = read_lines("src/input.txt") {
         // Consumes the iterator, returns an (Optional) String
         for line in lines {
             if let Ok(val) = line {
-                if val.is_empty() {
-                    curr_val = 0;
-                    continue;
-                }
-                // ADD TO VAL
-                let as_int: i32 = val.parse().unwrap();
-                curr_val += as_int;
-                if curr_val > max_val {
-                    max_val = curr_val;
-                }
+                let curr_score = play_scores.get(&val).unwrap();
+                score += curr_score;
             }
         }
     }
 
-    println!("Max Cals: {}", max_val);
+    println!("Score: {}", score);
 }
 
 // The output is wrapped in a Result to allow matching on errors

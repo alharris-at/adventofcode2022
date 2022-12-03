@@ -3,8 +3,8 @@ use std::io::{BufRead, Lines, BufReader, Result};
 use std::path::Path;
 
 fn main() {
-    let mut max_val = 0;
     let mut curr_val = 0;
+    let mut elf_vals: Vec<i32> = Vec::new();
 
     // File hosts must exist in current path before this produces output
     if let Ok(lines) = read_lines("src/input.txt") {
@@ -12,20 +12,19 @@ fn main() {
         for line in lines {
             if let Ok(val) = line {
                 if val.is_empty() {
+                    elf_vals.push(curr_val);
                     curr_val = 0;
                     continue;
                 }
-                // ADD TO VAL
-                let as_int: i32 = val.parse().unwrap();
-                curr_val += as_int;
-                if curr_val > max_val {
-                    max_val = curr_val;
-                }
+                curr_val += val.parse::<i32>().unwrap();
             }
         }
     }
 
-    println!("Max Cals: {}", max_val);
+    elf_vals.sort();
+    elf_vals.reverse();
+
+    println!("Elf Vals: {}, {}, {} - Sum: {}", elf_vals[0], elf_vals[1], elf_vals[2], elf_vals[0] + elf_vals[1] + elf_vals[2]);
 }
 
 // The output is wrapped in a Result to allow matching on errors
